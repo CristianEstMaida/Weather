@@ -1,0 +1,80 @@
+﻿@page "/weather"
+@inject HttpClient HttpClient
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (loading)
+{
+    <p><em>Loading...</em></p>
+}
+else if (notAuthorized)
+{
+    <p><em>Not authorized</em></p>
+}
+else if (forecasts == null)
+{
+    <p><em>No results</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private bool loading;
+    private bool notAuthorized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+
+        try
+        {
+            await Task.Delay(2000);
+            var result = await HttpClient.GetAsync("api/WeatherForecast");
+
+            if (!result.IsSuccessStatusCode)
+            {
+                if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    notAuthorized = true;
+
+                return;
+            }
+
+            forecasts = await result.Content.ReadFromJsonAsync<WeatherForecast[]>();
+        }
+        catch (Exception)
+        {
+            // TODO
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

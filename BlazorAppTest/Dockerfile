@@ -68,7 +68,7 @@ EXPOSE 80
 # Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["BlazorAppTest.csproj", "./"]
+COPY ["BlazorAppTest/BlazorAppTest/BlazorAppTest.csproj", "./"]
 RUN dotnet restore
 COPY . .
 RUN dotnet publish -c Release -o /app

@@ -53,9 +53,28 @@
 # EXPOSE 80
 
 # Etapa 1: Construir la aplicación Blazor WebAssembly (Cliente)
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-client
-WORKDIR /app/client
-COPY ["BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj", "/app/client/BlazorAppTest.Client.csproj"]
-RUN dotnet restore "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj"
-COPY ["BlazorAppTest/BlazorAppTest.Client/", "/app/client/"]
-RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj" -c Release -o /publish/wwwroot
+# FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-client
+# WORKDIR /app/client
+# COPY ["BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj", "/app/client/BlazorAppTest.Client.csproj"]
+# RUN dotnet restore "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj"
+# COPY ["BlazorAppTest/BlazorAppTest.Client/", "/app/client/"]
+# RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj" -c Release -o /publish/wwwroot
+
+# Imagen base para .NET 8
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+# Etapa de build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["BlazorAppTest.csproj", "./"]
+RUN dotnet restore
+COPY . .
+RUN dotnet publish -c Release -o /app
+
+# Etapa final
+FROM base AS final
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "BlazorAppTest.dll"]

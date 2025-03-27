@@ -38,16 +38,24 @@
 # EXPOSE 80
 
 # Etapa de construcción
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
-COPY ["BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj", "./"]
-RUN dotnet restore "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj"
-COPY ["BlazorAppTest/BlazorAppTest.Client/", "./"]
-RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj" -c Release -o /publish/wwwroot
+# FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# WORKDIR /app
+# COPY ["BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj", "./"]
+# RUN dotnet restore "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj"
+# COPY ["BlazorAppTest/BlazorAppTest.Client/", "./"]
+# RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj" -c Release -o /publish/wwwroot
 
-# Etapa final (Servidor Web)
-FROM nginx:alpine AS final
-WORKDIR /usr/share/nginx/html
-COPY --from=build /publish/wwwroot .
-COPY BlazorAppTest/nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+# # Etapa final (Servidor Web)
+# FROM nginx:alpine AS final
+# WORKDIR /usr/share/nginx/html
+# COPY --from=build /publish/wwwroot .
+# COPY BlazorAppTest/nginx.conf /etc/nginx/conf.d/default.conf
+# EXPOSE 80
+
+# Etapa 1: Construir la aplicación Blazor WebAssembly (Cliente)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-client
+WORKDIR /app/client
+COPY ["BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj", "/app/client/BlazorAppTest.Client.csproj"]
+RUN dotnet restore "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj"
+COPY ["BlazorAppTest/BlazorAppTest.Client/", "/app/client/"]
+RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.csproj" -c Release -o /publish/wwwroot

@@ -10,8 +10,8 @@ RUN dotnet publish "BlazorAppTest/BlazorAppTest.Client/BlazorAppTest.Client.cspr
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-server
 WORKDIR /app/server
 COPY ["BlazorAppTest/BlazorAppTest/BlazorAppTest.csproj", "./"]
-RUN dotnet restore "BlazorAppTest/BlazorAppTest/BlazorAppTest.Server.csproj"
-COPY ["BlazorAppTest/BlazorAppTest.Server/", "./"]
+RUN dotnet restore "BlazorAppTest/BlazorAppTest/BlazorAppTest.csproj"
+COPY ["BlazorAppTest/BlazorAppTest/", "./"]
 RUN dotnet publish "BlazorAppTest/BlazorAppTest.csproj" -c Release -o /publish/server
 
 # Etapa 3: Imagen Final (Servidor con Archivos del Cliente)

@@ -1,0 +1,5 @@
+D:\source\BlazorAppTest\BlazorAppTest\BlazorAppTest.Client\obj\Debug\net8.0\staticwebassets.build.json
+D:\source\BlazorAppTest\BlazorAppTest\BlazorAppTest.Client\obj\Debug\net8.0\staticwebassets.build.json
+D:\source\BlazorAppTest\BlazorAppTest\BlazorAppTest.Client\obj\Debug\net8.0\staticwebassets.build.json
+D:\source\BlazorAppTest\BlazorAppTest\BlazorAppTest.Client\obj\Debug\net8.0\staticwebassets.build.json
+D:\source\BlazorAppTest\BlazorAppTest\BlazorAppTest.Client\obj\Debug\net8.0\staticwebassets.build.json
